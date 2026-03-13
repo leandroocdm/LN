@@ -1,104 +1,100 @@
-/* CONFIGURAÇÕES GERAIS */
-
 :root{
     --cor-primaria:#4fb0d8;
-    --cor-secundaria: #f39c12;
+    --cor-secundaria:#f39c12;
 }
 
-* { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
+*{ 
+    margin:0; 
+    padding:0; 
+    box-sizing:border-box; 
 }
 
-html, body {
-    overflow-x: hidden;
-    min-height: 100vh;
-    min-height: 100dvh;
+html, body{
+    overflow-x:hidden;
+    min-height:100dvh;
 }
 
-body { 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    background-color: #f9f7f5; 
-    color: #333; 
-    line-height: 1.6;
-    min-width: 320px;
+body{ 
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background-color:#f9f7f5; 
+    color:#333; 
+    line-height:1.6;
+    min-width:320px;
 }
 
-a { 
-    text-decoration: none;
-    color: inherit; 
+a{ 
+    text-decoration:none;
+    color:inherit; 
 }
-
 
 /* CABEÇALHO */
 
-.topo-site { 
-    background: #fff; 
-    padding: 0px 5%; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
-    position: fixed; 
-    width: 100%; 
-    top: 0; 
-    z-index: 1000; 
+.topo-site{ 
+    background:#fff; 
+    padding:0px 5%; 
+    display:flex; 
+    justify-content:space-between; 
+    align-items:center; 
+    box-shadow:0 2px 10px rgba(0,0,0,0.1); 
+    position:fixed; 
+    width:100%; 
+    top:0; 
+    z-index:1000; 
 }
 
-
-
-.logo { 
-    font-size: 24px; 
-    font-weight: bold; 
-    color: #1a1a1a; 
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    white-space: nowrap;
+.logo{ 
+    font-size:24px; 
+    font-weight:bold; 
+    color:#1a1a1a; 
+    display:flex;
+    align-items:center;
+    gap:10px;
+    white-space:nowrap;
 }
 
-.logo img { 
-    height: 50px;
-    width: auto;
+.logo img{ 
+    height:50px;
+    width:auto;
 }
 
-.logo span { 
-    color: #000; 
+.logo span{ 
+    color:#000; 
 }
 
-.menu { 
-    padding-left: 20px;
+.menu{ 
+    padding-left:20px;
 }
 
-.menu a {
-    font-size: 14px; 
-    font-weight: 600; 
-    text-transform: uppercase; 
-    color: #666; 
-    transition: 0.3s; 
-    padding: 10px;
+.menu a{
+    font-size:14px; 
+    font-weight:600; 
+    text-transform:uppercase; 
+    color:#666; 
+    transition:0.3s; 
+    padding:10px;
 }
 
-.menu a:hover { 
-    color: var(--cor-primaria); 
+.menu a:hover{ 
+    color:var(--cor-primaria); 
 }
 
-.botao-login-admin { 
-    border: 2px solid #333; 
-    padding: 8px 18px; 
-    border-radius: 5px; 
-    font-weight: bold; 
-    cursor: pointer; 
-    background: none; 
-    margin-left: 20px; 
-    transition: 0.3s; 
+.botao-login-admin{ 
+    border:2px solid #333; 
+    padding:8px 18px; 
+    border-radius:5px; 
+    font-weight:bold; 
+    cursor:pointer; 
+    background:none; 
+    margin-left:20px; 
+    transition:0.3s; 
 }
 
-.botao-login-admin:hover { 
-    background: #333; 
-    color: #fff; 
+.botao-login-admin:hover{ 
+    background:#333; 
+    color:#fff; 
 }
+
+/* LOGIN */
 
 .titulo-login{
     text-align:center;
@@ -117,7 +113,7 @@ a {
 .botao-entrar{
     width:100%;
     padding:12px;
-    background: var(--cor-secundaria);
+    background:var(--cor-secundaria);
     color:white;
     border:none;
     border-radius:6px;
@@ -127,7 +123,7 @@ a {
 }
 
 .botao-entrar:hover{
-    background:var(--cor-secundaria);
+    background:#f5a623;
 }
 
 .erro-msg{
@@ -139,86 +135,77 @@ a {
 }
 
 .botao-fechar{ 
-    position: absolute; 
-    top: 10px; 
-    right: 10px; 
-    padding: 10px; 
-    color: red; 
-    border: 1px solid red; 
-    background: none; 
-    cursor: pointer; }
-
+    position:absolute; 
+    top:10px; 
+    right:10px; 
+    padding:10px; 
+    color:red; 
+    border:1px solid red; 
+    background:none; 
+    cursor:pointer; 
+}
 
 /* HERO */
 
-.secao-destaque { 
-    min-height: 100vh;
-    min-height: 100dvh;
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),url(
-        "img/fundo1.jpg"
-    );
-    background-size: cover;
-    background-position: center; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    text-align: center; 
-    color: #fff; 
-    padding: 0 20px; 
+.secao-destaque{ 
+    min-height:100dvh;
+    background:linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),url("img/fundo1.jpg");
+    background-size:cover;
+    background-position:center; 
+    display:flex; 
+    align-items:center; 
+    justify-content:center; 
+    text-align:center; 
+    color:#fff; 
+    padding:0 20px; 
 }
 
-.conteudo-destaque h1 { 
-    font-size: 50px; 
-    margin-bottom: 15px; 
+.conteudo-destaque h1{ 
+    font-size:50px; 
+    margin-bottom:15px; 
 }
 
-.conteudo-destaque p { 
-    font-size: 20px; 
-    margin-bottom: 30px; 
-    opacity: 0.9; 
+.conteudo-destaque p{ 
+    font-size:20px; 
+    margin-bottom:30px; 
+    opacity:0.9; 
 }
 
-.botao-orcamento { 
-    background: var(--cor-secundaria); 
-    color: #fff; 
-    padding: 15px 40px; 
-    font-size: 18px; 
-    font-weight: bold; 
-    border-radius: 4px; 
-    transition: 0.3s; 
-    display: inline-block; 
+.botao-orcamento{ 
+    background:var(--cor-secundaria); 
+    color:#fff; 
+    padding:15px 40px; 
+    font-size:18px; 
+    font-weight:bold; 
+    border-radius:4px; 
+    transition:all 0.3s ease; 
+    display:inline-block; 
 }
 
-.botao-orcamento:hover { 
-    background: #f5a623; 
-    transform: translateY(-3px); 
+.botao-orcamento:hover{ 
+    background:#f5a623; 
+    transform:translateY(-3px); 
 }
-
 
 /* SOBRE */
 
-.secao-sobre { 
-    padding: 60px 10%; 
-    display: flex; 
-    gap: 50px; 
-    align-items: center; 
-    background: #fff; 
-    flex-wrap: wrap;
-    min-height: 70vh;
-
-    padding: 60px 10%;
-    overflow-x: hidden;
-    min-height: 100vh;
-    min-height: 100dvh;
+.secao-sobre{ 
+    padding:60px 10%; 
+    display:flex; 
+    gap:50px; 
+    align-items:center; 
+    background:#fff; 
+    flex-wrap:wrap;
+    min-height:100dvh;
 }
 
-.texto-sobre { 
-    flex: 1; 
+.texto-sobre{ 
+    flex:1; 
 }
 
-.texto-sobre h2 { 
-    font-size: 35px; 
-    margin-bottom: 20px; 
+.texto-sobre h2{ 
+    font-size:35px; 
+    margin-bottom:20px; 
 }
 
 .imag-marcenaria{
@@ -234,327 +221,287 @@ a {
     object-fit:cover;
 }
 
-
 /* SERVIÇOS */
-
-
 
 .secao-servicos{
     display:flex;
     flex-direction:column;
     justify-content:center;
-    text-align: center; 
-
-    padding: 60px 10%;
-    overflow-x: hidden;
-    min-height: 100vh;
-    min-height: 100dvh;
+    text-align:center; 
+    padding:60px 10%;
+    min-height:100dvh;
+    max-width:1400px;
+    margin:auto;
 }
 
-.secao-servicos h2 {
-    padding: 40px 10px ;
+.secao-servicos h2{
+    padding:40px 10px;
 }
 
-.grid-servicos { 
-    display: flex;
-    gap: 5px;
-    margin-top: 30px;
-
+.grid-servicos{ 
+    display:flex;
+    gap:20px;
+    margin-top:30px;
     overflow:hidden;
     scroll-behavior:smooth;
 }
 
+/* scrollbar */
 
-
-/* esconder barra feia no mobile */
-.grid-servicos::-webkit-scrollbar {
+.grid-servicos::-webkit-scrollbar{
     height:6px;
 }
 
-.grid-servicos::-webkit-scrollbar-thumb {
+.grid-servicos::-webkit-scrollbar-thumb{
     background:#ccc;
     border-radius:10px;
 }
 
 /* cards */
+
 .caixa-servico{
-    
-    min-width:100%;
-    flex:0 0 65%;
-
-
-}
-
-.caixa-servico { 
-    background: #fff; 
-    padding: 20px 15px; 
-    border-radius: 8px; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+    flex:0 0 100%;
+    max-width:900px;
+    margin:auto;
+    background:#fff;
+    padding:20px;
+    border-radius:8px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.05);
 }
 
 .caixa-img{
     width:100%;
-    height:70%;
-    object-fit:contain;
+    aspect-ratio:16/9;
     border-radius:10px;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
-.foto-marcenaria{
+.foto-carrossel{
     width:100%;
     height:100%;
-    object-fit:cover;
-    transition: 0.3s;
+    object-fit:contain;
+    transition:0.3s;
 }
 
-.caixa-servico:hover .foto-marcenaria{
-    transform: scale(1.05);
+.caixa-servico:hover .foto-carrossel{
+    transform:scale(1.05);
 }
 
-.caixa-servico h3 { 
+.caixa-servico h3{ 
     color:var(--cor-secundaria); 
-    margin: 15px 0; 
+    margin:15px 0; 
 }
 
+/* CONTATO */
 
-
-/* CONTATOS RODAPÉ */
-.rodape {
-    background-color: #000;
-    color: #fff;
-    text-align: center;
-   
-    padding: 60px 10%;
-    overflow-x: hidden;
-    min-height: 100vh;
-    min-height: 100dvh;
+.secao-contato{
+    min-height:100dvh;
+    padding:80px 10%;
+    text-align:center;
+    background:#000;
+    color:#fff;
 }
 
-.rodape p {
-    padding: 10px;
+.secao-contato h2{
+    font-size:32px;
+    margin-bottom:10px;
 }
 
-
-
-.dados_contato {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    
+.subtitulo{
+    opacity:0.8;
+    margin-bottom:50px;
 }
 
-/* bloco Nilton e Marcelo lado a lado */
-.bloco-contatos{
+.container-contato{
     display:flex;
     justify-content:center;
-    align-items:flex-start;
-    gap:30px;
+    gap:40px;
     flex-wrap:wrap;
 }
 
-/* cada pessoa */
-.contato-pessoa{
-    display:flex;
-    flex-direction:column;
-    gap:8px;
+.card-contato{
+    background:#111;
+    padding:30px;
+    border-radius:12px;
+    width:260px;
+    box-shadow:0 0 15px rgba(0,0,0,0.5);
+    transition:0.3s;
 }
 
-/* linha telefone/whatsapp */
+.card-contato:hover{
+    transform:translateY(-5px);
+}
+
+.card-contato h3{
+    margin-bottom:15px;
+    color:#00bcd4;
+}
+
+.card-contato p{
+    margin:5px 0;
+}
+
+.card-contato span{
+    font-weight:bold;
+}
+
+.texto-redes{
+    margin-top:50px;
+}
+
+.redes{
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    margin-top:20px;
+}
+
+.redes img{
+    width:60px;
+    border-radius:15px;
+    transition:0.3s;
+}
+
+.redes img:hover{
+    transform:scale(1.1);
+}
+
 .linha-contato{
     display:flex;
     align-items:center;
     gap:10px;
-    text-decoration:none;
-    color:inherit;
 }
 
-/* icones */
 .icon-contato{
-    width:20px;
-    height:20px;
-}
-
-/* email centralizado */
-.email-contato{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:10px;
-    margin-top:10px;
-}
-
-/* horario */
-.horario{
-    text-align:center;
-}
-
-/* redes sociais */
-.banner_redes {
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    gap:15px;
-}
-
-.banner_redes_ic {
-    display:flex;
-    gap:20px;
-}
-
-.logo_redes{
-    height:50px;
-    border-radius:15px;
-}
-
-
-/* DIREITOS */
-
-.direitos {
-    margin-top: 20px;
-    text-align: center;
-    width: 100%;
-    border-top: 1px solid rgba(255,255,255,0.2);
-    padding-top: 20px;
-    font-size: 13px;
-    color: #bbb;
-    word-wrap: break-word;
-}
-
-.direitos p {
-    margin: 5px 0;
-}
-
-.link-dev {
-    color: #a8ec09;
-    font-weight: 600;
-    transition: 0.3s;
-    display: inline-block;
-}
-
-.link-dev:hover {
-    color: #fff;
-    text-decoration: underline;
-}
-
-
-/* MODAL */
-
-.fundo-modal { 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    background: rgba(0,0,0,0.8); 
-    display: none; 
-    align-items: center; 
-    justify-content: center; 
-    z-index: 2000; 
-}
-
-.janela-login { 
-    background: #fff; 
-    padding: 40px; 
-    border-radius: 8px; 
-    width: 100%; 
-    max-width: 350px; 
-    position: relative; 
-}
-
-
-/* MENU MOBILE */
-
-.menu-mobile-icon {
-    display: none;
-    font-size: 30px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #333;
-}
-
-
-/* RESPONSIVIDADE */
-
-@media (max-width: 768px) {
-
-    .menu-mobile-icon {
-        display: block;
-    }
-
-    .menu {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 70px;
-        left: 0;
-        width: 100%;
-        background-color: #fff;
-        padding: 20px;
-        box-shadow: 0 10px 10px rgba(0,0,0,0.1);
-        text-align: center;
-    }
-
-    .menu.ativo {
-        display: flex;
-    }
-
-    .menu a {
-        margin: 15px 0;
-        display: block;
-    }
-
-    .botao-login-admin {
-        margin: 10px auto;
-        width: fit-content;
-    }
-
-    .rodape {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .secao-sobre {
-        flex-direction: column;
-        gap: 0px;
-    }
-
-    .conteudo-destaque h1 {
-        font-size: 32px;
-    }
-
-    .conteudo-destaque p {
-        font-size: 16px;
-    }
-
-    .logo{
-    font-size:16px;
-    gap:8px;
-}
-
-.logo img{
+    width:40px;
     height:40px;
 }
 
+/* RODAPÉ */
 
-
-
-
+.rodape{
+    text-align:center;
+    padding:30px;
+    background:#000;
 }
 
+.linha{
+    width:80%;
+    height:1px;
+    background:#333;
+    margin:30px auto;
+}
+
+.dev span{
+    color:#00ff66;
+}
+
+/* MODAL */
+
+.fundo-modal{ 
+    position:fixed; 
+    top:0; 
+    left:0; 
+    width:100%; 
+    height:100%; 
+    background:rgba(0,0,0,0.8); 
+    display:none; 
+    align-items:center; 
+    justify-content:center; 
+    z-index:2000; 
+}
+
+.janela-login{ 
+    background:#fff; 
+    padding:40px; 
+    border-radius:8px; 
+    width:100%; 
+    max-width:350px; 
+    position:relative; 
+}
+
+/* MENU MOBILE */
+
+.menu-mobile-icon{
+    display:none;
+    font-size:30px;
+    background:none;
+    border:none;
+    cursor:pointer;
+    color:#333;
+}
+
+/* RESPONSIVO */
+
+@media (max-width:768px){
+
+    .menu-mobile-icon{
+        display:block;
+    }
+
+    .menu{
+        display:none;
+        flex-direction:column;
+        position:absolute;
+        top:70px;
+        left:0;
+        width:100%;
+        background-color:#fff;
+        padding:20px;
+        box-shadow:0 10px 10px rgba(0,0,0,0.1);
+        text-align:center;
+    }
+
+    .menu.ativo{
+        display:flex;
+    }
+
+    .menu a{
+        margin:15px 0;
+        display:block;
+    }
+
+    .botao-login-admin{
+        margin:10px auto;
+        width:fit-content;
+    }
+
+    .secao-sobre{
+        flex-direction:column;
+        gap:0;
+    }
+
+    .conteudo-destaque h1{
+        font-size:32px;
+    }
+
+    .conteudo-destaque p{
+        font-size:16px;
+    }
+
+    .logo{
+        font-size:16px;
+        gap:8px;
+    }
+
+    .logo img{
+        height:40px;
+    }
+}
 
 /* TELAS MUITO PEQUENAS */
 
-@media (max-width: 380px) {
+@media (max-width:380px){
 
-    .logo {
-        font-size: 18px;
+    .logo{
+        font-size:18px;
     }
 
-    .logo span {
-        margin-left: 8px;
+    .logo span{
+        margin-left:8px;
     }
 
 }
