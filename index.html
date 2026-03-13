@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LN Climatização e Elétrica</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="topo-site">
+    <div class="logo">
+         <img src="img/logo.jpg" alt="LN Climatização e Elétrica">
+         <span>Climatização e Elétrica</span>
+    </div>
+    
+    <button class="menu-mobile-icon" onclick="toggleMenu()">
+        &#9776;
+    </button>
+
+    <nav class="menu" id="menuPrincipal">
+        <a href="#sobre" onclick="toggleMenu()">Sobre</a>
+        <a href="#servicos" onclick="toggleMenu()">Serviços</a>
+        <a href="#contato" onclick="toggleMenu()">Contato</a>
+        <button class="botao-login-admin" onclick="abrirModal()">ADMIN</button>
+    </nav>
+</header>
+
+
+<section class="secao-destaque">
+    <div class="conteudo-destaque">
+        <h1>Especialistas em Climatização e Elétrica</h1>
+        <p>Instalação, limpeza e manutenção de ar-condicionado e serviços elétricos com qualidade e segurança.</p>
+        <a href="https://wa.me/5519983161919" class="botao-orcamento">Solicitar Orçamento Grátis</a>
+    </div>
+</section>
+
+
+<section id="sobre" class="secao-sobre" style="margin-top: 60px;">
+    
+    <div class="texto-sobre">
+        <h2>Sobre a LN Climatização e Elétrica</h2>
+
+        <p>
+            A LN Climatização e Elétrica oferece serviços especializados em instalação,
+            limpeza e manutenção de ar-condicionado, além de serviços elétricos
+            residenciais e comerciais.
+        </p>
+
+        <br>
+
+        <p>
+            Trabalhamos com responsabilidade, segurança e qualidade para garantir
+            conforto térmico e instalações elétricas seguras para sua casa ou empresa.
+        </p>
+
+        <br>
+
+        <p><strong>Entre em contato e solicite um orçamento.</strong></p>
+    </div>
+
+    <div class="imag-marcenaria">
+        <img src="/img/arcondicionado1.jpg" alt="instalação ar condicionado">
+    </div>
+
+</section>
+
+
+<section id="servicos" class="secao-servicos">
+
+    <h2>Nossos Serviços</h2>
+
+    <div class="grid-servicos">
+
+        <div class="caixa-servico">
+            <div class="caixa-img">
+                <img class="foto-marcenaria" src="/img/instalacao-ar.jpg" alt="instalação ar condicionado">
+            </div>
+
+            <h3>Instalação de Ar-Condicionado</h3>
+
+            <p>
+                Instalação profissional de ar-condicionado split com segurança,
+                eficiência e acabamento de qualidade.
+            </p>
+        </div>
+
+
+        <div class="caixa-servico">
+            <div class="caixa-img">
+                <img class="foto-marcenaria" src="/img/limpeza-ar.jpg" alt="limpeza ar condicionado">
+            </div>
+
+            <h3>Limpeza de Ar-Condicionado</h3>
+
+            <p>
+                Limpeza completa para melhorar o desempenho do aparelho
+                e garantir um ar mais saudável.
+            </p>
+        </div>
+
+
+        <div class="caixa-servico">
+            <div class="caixa-img">
+                <img class="foto-marcenaria" src="/img/manutencao-ar.jpg" alt="manutenção ar condicionado">
+            </div>
+
+            <h3>Manutenção</h3>
+
+            <p>
+                Diagnóstico e manutenção preventiva ou corretiva
+                para garantir o funcionamento ideal do seu equipamento.
+            </p>
+        </div>
+
+
+        <div class="caixa-servico">
+            <div class="caixa-img">
+                <img class="foto-marcenaria" src="/img/servico-eletrico.jpg" alt="serviços elétricos">
+            </div>
+
+            <h3>Serviços Elétricos</h3>
+
+            <p>
+                Instalações elétricas, troca de disjuntores, tomadas,
+                iluminação e manutenção elétrica em geral.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<footer id="contato" class="rodape">
+
+    <div>
+
+        <h2>LN Climatização e Elétrica</h2>
+
+        <p>
+            Soluções em climatização e elétrica com qualidade,
+            segurança e atendimento profissional.
+        </p>
+
+    </div>
+
+
+    <div class="dados_contato">
+
+    <div class="contato">
+
+        <div class="bloco-contatos">
+                    
+            <div class="contato-pessoa">
+                <a href="tel:+5519998629120" class="linha-contato">
+                    <img src="/pageorcamento/static/img/ic_telefone.png" class="icon-contato">
+                    <p>Telefone Nilton: (19) 9.9862-9120</p>
+                </a>
+
+                <a href="https://wa.me/5519998629120" class="linha-contato whatsapp">
+                    <img src="/pageorcamento/static/img/ic_whatsapp.png" class="icon-contato">
+                    <p>WhatsApp Nilton: (19) 9.9.9862-9120</p>
+                </a>
+            </div>
+
+            <div class="contato-pessoa">
+                <a href="tel:+5519996747832" class="linha-contato">
+                    <img src="/pageorcamento/static/img/ic_telefone.png" class="icon-contato">
+                    <p>Telefone Marcelo: (19) 9.9674-7832</p>
+                </a>
+
+                <a href="https://wa.me/55199967478329" class="linha-contato whatsapp">
+                    <img src="/pageorcamento/static/img/ic_whatsapp.png" class="icon-contato">
+                    <p>WhatsApp Marcelo: (19) 9.9674-7832</p>
+                </a>
+            </div>
+
+        </div>
+
+        <a href="" class="linha-contato email-contato">
+            <img src="/pageorcamento/static/img/ic_email.png" class="icon-contato">
+            <p>contatoLN@gmail.com</p>
+        </a>
+
+        <p class="horario">🕒 Seg a Sex: 08h às 18h</p>
+
+    </div>
+
+    <div class="banner_redes">
+
+        <p>Acompanhe também nas redes sociais.</p>
+
+        <div class="banner_redes_ic">
+            <a href="https://instagram.com/lnclimatizacaoeletrica">
+                <img class="logo_redes" src="/pageorcamento/static/img/ic_instagram.png">
+            </a>
+            <a href="#">
+                <img class="logo_redes" src="/pageorcamento/static/img/ic_facebook.webp">
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+    <div class="direitos">
+
+        <p>
+            © <span id="anoAtual"></span> LN Climatização e Elétrica.<br>
+            Todos os direitos reservados.
+        </p>
+
+        <p>
+            Desenvolvido por 
+            <a href="https://linktr.ee/Leandrocdm" target="_blank" class="link-dev">
+                Leandro Cardoso de Moraes
+            </a>
+        </p>
+
+    </div>
+
+</footer>
+
+
+
+<div class="fundo-modal" id="modalAcesso">
+
+    <div class="janela-login">
+
+        <button class="botao-fechar" onclick="fecharModal()">✕</button>
+
+        <h3 class="titulo-login">Acesso Proprietário</h3>
+
+        <input type="text" 
+               id="usuario" 
+               class="campo-entrada" 
+               placeholder="Seu usuário">
+
+        <input type="password" 
+               id="senha" 
+               class="campo-entrada" 
+               placeholder="Sua senha">
+
+        <button class="botao-entrar" onclick="validarLogin()">
+            Acessar Orçamentos
+        </button>
+
+        <p id="mensagemErro" class="erro-msg">
+            Usuário ou senha inválidos!
+        </p>
+
+    </div>
+
+</div>
+
+
+<script src="script.js"></script>
+</body>
+</html>
