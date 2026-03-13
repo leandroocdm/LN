@@ -518,6 +518,7 @@ a {
 
     .secao-sobre {
         flex-direction: column;
+        gap: 0px;
     }
 
     .conteudo-destaque h1 {
