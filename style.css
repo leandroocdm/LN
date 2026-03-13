@@ -1,4 +1,10 @@
 /* CONFIGURAÇÕES GERAIS */
+
+:root{
+    --cor-primaria:#4fb0d8;
+    --cor-secundaria: #f39c12;
+}
+
 * { 
     margin: 0; 
     padding: 0; 
@@ -75,7 +81,7 @@ a {
 }
 
 .menu a:hover { 
-    color: #a8ec09; 
+    color: var(--cor-primaria); 
 }
 
 .botao-login-admin { 
@@ -111,7 +117,7 @@ a {
 .botao-entrar{
     width:100%;
     padding:12px;
-    background:#8b4513;
+    background: var(--cor-secundaria);
     color:white;
     border:none;
     border-radius:6px;
@@ -121,7 +127,7 @@ a {
 }
 
 .botao-entrar:hover{
-    background:#a0522d;
+    background:var(--cor-secundaria);
 }
 
 .erro-msg{
@@ -173,7 +179,7 @@ a {
 }
 
 .botao-orcamento { 
-    background: #8b4513; 
+    background: var(--cor-secundaria); 
     color: #fff; 
     padding: 15px 40px; 
     font-size: 18px; 
@@ -184,7 +190,7 @@ a {
 }
 
 .botao-orcamento:hover { 
-    background: #a0522d; 
+    background: #f5a623; 
     transform: translateY(-3px); 
 }
 
@@ -192,13 +198,18 @@ a {
 /* SOBRE */
 
 .secao-sobre { 
-    padding: 80px 10%; 
+    padding: 60px 10%; 
     display: flex; 
     gap: 50px; 
     align-items: center; 
     background: #fff; 
     flex-wrap: wrap;
     min-height: 70vh;
+
+    padding: 60px 10%;
+    overflow-x: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
 }
 
 .texto-sobre { 
@@ -228,16 +239,50 @@ a {
 
 
 
-.secao-servicos { 
-    padding: 80px 10%; 
+.secao-servicos{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
     text-align: center; 
+
+    padding: 60px 10%;
+    overflow-x: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+.secao-servicos h2 {
+    padding: 40px 10px ;
 }
 
 .grid-servicos { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-    gap: 30px; 
-    margin-top: 30px; 
+    display: flex;
+    gap: 5px;
+    margin-top: 30px;
+
+    overflow:hidden;
+    scroll-behavior:smooth;
+}
+
+
+
+/* esconder barra feia no mobile */
+.grid-servicos::-webkit-scrollbar {
+    height:6px;
+}
+
+.grid-servicos::-webkit-scrollbar-thumb {
+    background:#ccc;
+    border-radius:10px;
+}
+
+/* cards */
+.caixa-servico{
+    
+    min-width:100%;
+    flex:0 0 65%;
+
+
 }
 
 .caixa-servico { 
@@ -248,8 +293,10 @@ a {
 }
 
 .caixa-img{
-    height:200px;
-    overflow:hidden;
+    width:100%;
+    height:70%;
+    object-fit:contain;
+    border-radius:10px;
 }
 
 .foto-marcenaria{
@@ -264,7 +311,7 @@ a {
 }
 
 .caixa-servico h3 { 
-    color: #8b4513; 
+    color:var(--cor-secundaria); 
     margin: 15px 0; 
 }
 
@@ -275,8 +322,11 @@ a {
     background-color: #000;
     color: #fff;
     text-align: center;
-    padding: 10px;
-    
+   
+    padding: 60px 10%;
+    overflow-x: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
 }
 
 .rodape p {
