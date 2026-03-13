@@ -31,3 +31,26 @@ function toggleMenu() {
     }
 
     document.getElementById("anoAtual").textContent = new Date().getFullYear();
+
+const carousel = document.querySelector(".grid-servicos");
+
+    let scrollAmount = 0;
+    const cardWidth = (carousel.clientWidth+5); 
+    const delay = 3000;
+
+    function autoScroll(){
+
+        scrollAmount += cardWidth;
+
+        if(scrollAmount >= carousel.scrollWidth - carousel.clientWidth){
+            scrollAmount = 0;
+        }
+
+        carousel.scrollTo({
+            left: scrollAmount,
+            behavior: "smooth"
+        });
+
+    }
+
+    setInterval(autoScroll, delay);
