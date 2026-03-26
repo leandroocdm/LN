@@ -5,189 +5,123 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Orçamento Profissional</title>
-    <link rel="stylesheet" href="static/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background-color: #f4f4f9; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        fieldset { border: 1px solid #ddd; margin-bottom: 20px; padding: 15px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #0056b3; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:disabled { background: #ccc; }
+        #pdf-template { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 700px; /* Largura fixa para o print */
+            background: white; 
+            visibility: hidden; /* Esconde mas mantém no DOM */
+            height: auto;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container">
-        <h2>Gerador de Orçamento Profissional</h2>
+        <h2>Gerador de Orçamento</h2>
         <form id="orcamentoForm">
             <fieldset>
-                <legend>Detalhes do Cliente</legend>
-                <label for="nomeCliente">Nome do Cliente:</label>
-                <input type="text" id="nomeCliente" name="nomeCliente" required><br><br>
-
-                <div class="cpf-cnpj-selection">
-                    <label><input type="radio" name="docType" value="cpfCnpj" checked> CPF/CNPJ</label>
-                    <label><input type="radio" name="docType" value="na"> Não informar</label>
-                </div>
-
-                <div id="cpfCnpjInputContainer">
-                    <label for="cpfCnpjCliente">CPF/CNPJ:</label>
-                    <input type="text" id="cpfCnpjCliente" name="cpfCnpjCliente" maxlength="18" required><br><br>
-                </div>
+                <legend>Cliente</legend>
+                <label>Nome:</label>
+                <input type="text" id="nomeCliente" required>
+                
+                <label>CPF/CNPJ:</label>
+                <input type="text" id="cpfCnpjCliente">
             </fieldset>
 
             <fieldset>
-                <legend>Detalhes do Serviço</legend>
-                <label for="descricaoServico">Descrição do Serviço:</label><br>
-                <textarea id="descricaoServico" name="descricaoServico" rows="6" required></textarea><br><br>
-
-                <label for="observacoes">Observações adicionais:</label><br>
-                <textarea id="observacoes" name="observacoes" rows="4"></textarea><br><br>
-
-                <label for="valorTotal">Valor Total (R$):</label>
-                <input type="number" id="valorTotal" name="valorTotal" step="0.01" required><br><br>
+                <legend>Serviço</legend>
+                <label>Descrição:</label>
+                <textarea id="descricaoServico" rows="5" required></textarea>
+                
+                <label>Valor Total (R$):</label>
+                <input type="number" id="valorTotal" step="0.01" required>
             </fieldset>
 
             <button type="submit" id="gerarPdfBtn">Gerar PDF</button>
         </form>
     </div>
 
-    <div id="pdf-template" style="position: fixed; top: 0; left: 0; width: 800px; opacity: 0; pointer-events: none; z-index: -9999; background: white;"></div>
+    <div id="pdf-template"></div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('orcamentoForm');
-            const gerarPdfBtn = document.getElementById('gerarPdfBtn');
-            const pdfTemplateElement = document.getElementById('pdf-template');
-            
-            // Taxas configuráveis
-            const PIX_DISCOUNT_RATE = 0.05;
-            const CARD_MARKUP_RATE = 0.10;
+        const form = document.getElementById('orcamentoForm');
+        const btn = document.getElementById('gerarPdfBtn');
+        const template = document.getElementById('pdf-template');
 
-            const docTypeRadios = document.querySelectorAll('input[name="docType"]');
-            const cpfCnpjInputContainer = document.getElementById('cpfCnpjInputContainer');
-            const cpfCnpjInput = document.getElementById('cpfCnpjCliente');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            btn.disabled = true;
+            btn.textContent = 'Gerando...';
 
-            // Alternar exibição de CPF/CNPJ
-            docTypeRadios.forEach(radio => {
-                radio.addEventListener('change', (e) => {
-                    if (e.target.value === 'na') {
-                        cpfCnpjInputContainer.style.display = 'none';
-                        cpfCnpjInput.removeAttribute('required');
-                        cpfCnpjInput.value = '';
-                    } else {
-                        cpfCnpjInputContainer.style.display = 'block';
-                        cpfCnpjInput.setAttribute('required', 'required');
+            // 1. Pegar valores
+            const nome = document.getElementById('nomeCliente').value;
+            const desc = document.getElementById('descricaoServico').value;
+            const valor = parseFloat(document.getElementById('valorTotal').value).toFixed(2);
+            const data = new Date().toLocaleDateString('pt-BR');
+
+            // 2. Injetar HTML (Design simples e limpo para evitar erros)
+            template.innerHTML = `
+                <div style="padding: 50px; background: white !important; color: #000;">
+                    <h1 style="color: #0056b3; border-bottom: 2px solid #0056b3;">ORÇAMENTO - LN CLIMATIZAÇÃO</h1>
+                    <p><strong>Data:</strong> ${data}</p>
+                    <p><strong>Cliente:</strong> ${nome}</p>
+                    <hr>
+                    <h3>Descrição do Serviço:</h3>
+                    <div style="white-space: pre-wrap; margin-bottom: 20px;">${desc}</div>
+                    <hr>
+                    <h2 style="text-align: right;">VALOR TOTAL: R$ ${valor}</h2>
+                    <p style="font-size: 12px; margin-top: 50px; text-align: center;">Chave PIX: 13.744.549/0001-32</p>
+                </div>
+            `;
+
+            try {
+                // 3. Pequena pausa para o navegador renderizar o texto
+                await new Promise(r => setTimeout(r, 500));
+
+                // 4. Capturar com html2canvas
+                const canvas = await html2canvas(template, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: "#ffffff", // Força fundo branco
+                    logging: true, // Ver erros no console
+                    onclone: (clonedDoc) => {
+                        // Força o elemento clonado a ficar visível durante a captura
+                        clonedDoc.getElementById('pdf-template').style.visibility = 'visible';
                     }
                 });
-            });
 
-            form.addEventListener('submit', async (event) => {
-                event.preventDefault();
+                // 5. Gerar PDF
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                const width = pdf.internal.pageSize.getWidth();
+                const height = (canvas.height * width) / canvas.width;
 
-                gerarPdfBtn.disabled = true;
-                gerarPdfBtn.textContent = 'Processando...';
+                pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+                pdf.save(`Orcamento_${nome}.pdf`);
 
-                try {
-                    const { jsPDF } = window.jspdf;
-                    
-                    // Coleta de dados
-                    const nomeCliente = document.getElementById('nomeCliente').value;
-                    const cpfCnpjValue = cpfCnpjInput.value || 'Não informado';
-                    const descricaoServico = document.getElementById('descricaoServico').value;
-                    const observacoes = document.getElementById('observacoes').value || 'Nenhuma observação fornecida.';
-                    const valorTotalOriginal = parseFloat(document.getElementById('valorTotal').value);
-                    
-                    // Cálculos
-                    const valorAVista = (valorTotalOriginal * (1 - PIX_DISCOUNT_RATE)).toFixed(2);
-                    const valorCartao = (valorTotalOriginal * (1 + CARD_MARKUP_RATE)).toFixed(2);
-                    const today = new Date().toLocaleDateString('pt-BR');
-
-                    // Montando o HTML do PDF
-                    pdfTemplateElement.innerHTML = `
-                    <style>
-                        .pdf-content { padding: 40px; font-family: Arial, sans-serif; color: #333; background: white; }
-                        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0056b3; padding-bottom: 20px; }
-                        .company-info h1 { font-size: 28px; color: #0056b3; margin: 0; }
-                        .company-info p { margin: 2px 0; font-size: 14px; }
-                        .meta-info { text-align: right; font-size: 14px; }
-                        .section-title { font-weight: bold; margin-top: 25px; background: #f0f0f0; padding: 8px; text-transform: uppercase; font-size: 14px; border-left: 4px solid #0056b3; }
-                        .content-text { padding: 10px 5px; font-size: 14px; line-height: 1.5; white-space: pre-wrap; }
-                        .payment-grid { display: flex; gap: 15px; margin-top: 20px; }
-                        .pay-item { flex: 1; border: 1px solid #ddd; padding: 15px; text-align: center; border-radius: 5px; }
-                        .pay-label { font-size: 12px; color: #666; display: block; }
-                        .pay-val { font-weight: bold; font-size: 18px; color: #0056b3; display: block; margin-top: 5px; }
-                        .pix-highlight { margin-top: 30px; text-align: center; padding: 15px; background: #e7f3ff; border-radius: 8px; font-weight: bold; }
-                    </style>
-                    <div class="pdf-content">
-                        <div class="header">
-                            <div class="company-info">
-                                <h1>LN CLIMATIZAÇÃO</h1>
-                                <p>Elétrica e Ar Condicionado</p>
-                                <p>CNPJ: 13.744.549/0001-32</p>
-                            </div>
-                            <div class="meta-info">
-                                <div><strong>Data:</strong> ${today}</div>
-                                <div><strong>Validade:</strong> 7 dias</div>
-                            </div>
-                        </div>
-
-                        <div class="section-title">Dados do Cliente</div>
-                        <div class="content-text">
-                            <strong>Nome:</strong> ${nomeCliente}<br>
-                            <strong>CPF/CNPJ:</strong> ${cpfCnpjValue}
-                        </div>
-
-                        <div class="section-title">Descrição dos Serviços</div>
-                        <div class="content-text">${descricaoServico}</div>
-
-                        <div class="section-title">Observações</div>
-                        <div class="content-text">${observacoes}</div>
-
-                        <div class="section-title">Opções de Pagamento</div>
-                        <div class="payment-grid">
-                            <div class="pay-item">
-                                <span class="pay-label">À Vista (Pix/Dinheiro)</span>
-                                <span class="pay-val">R$ ${valorAVista}</span>
-                            </div>
-                            <div class="pay-item">
-                                <span class="pay-label">Parcelado (Padrão)</span>
-                                <span class="pay-val">R$ ${valorTotalOriginal.toFixed(2)}</span>
-                            </div>
-                            <div class="pay-item">
-                                <span class="pay-label">Cartão (até 12x)</span>
-                                <span class="pay-val">R$ ${valorCartao}</span>
-                            </div>
-                        </div>
-
-                        <div class="pix-highlight">
-                            Chave PIX: 13.744.549/0001-32
-                        </div>
-                    </div>`;
-
-                    // Aguarda o navegador processar o HTML e CSS injetado
-                    await new Promise(resolve => setTimeout(resolve, 800));
-
-                    const canvas = await html2canvas(pdfTemplateElement, {
-                        scale: 2, // Aumenta a qualidade da imagem
-                        useCORS: true,
-                        backgroundColor: "#ffffff",
-                        logging: false
-                    });
-
-                    const imgData = canvas.toDataURL('image/jpeg', 0.98);
-                    const pdf = new jsPDF('p', 'mm', 'a4');
-                    
-                    const pdfWidth = pdf.internal.pageSize.getWidth();
-                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-                    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-                    pdf.save(`Orcamento_${nomeCliente.replace(/\s+/g, '_')}.pdf`);
-
-                } catch (error) {
-                    console.error("Erro na geração:", error);
-                    alert('Erro ao gerar o PDF. Tente novamente.');
-                } finally {
-                    // Limpa o template e restaura o botão
-                    pdfTemplateElement.innerHTML = '';
-                    gerarPdfBtn.disabled = false;
-                    gerarPdfBtn.textContent = 'Gerar PDF';
-                }
-            });
+            } catch (err) {
+                console.error("Erro completo:", err);
+                alert("Erro ao gerar PDF. Abra o console (F12) para detalhes.");
+            } finally {
+                template.innerHTML = '';
+                btn.disabled = false;
+                btn.textContent = 'Gerar PDF';
+            }
         });
     </script>
 </body>
