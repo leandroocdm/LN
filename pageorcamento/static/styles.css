@@ -7,6 +7,10 @@ body {
     padding: 0;
 }
 
+.logo{
+    height: 80px;
+}
+
 .container {
     max-width: 600px;
     margin: 20px auto;
