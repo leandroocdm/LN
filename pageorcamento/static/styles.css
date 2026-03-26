@@ -100,4 +100,27 @@ button:disabled {
     background: white !important;
     color: #333;
 }
-</style>
+
+   /* SEU CSS DO FORMULÁRIO
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 20px auto; padding: 20px; background: rgb(201, 201, 201); border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        fieldset { margin-bottom: 15px; border: 1px solid #999; border-radius: 4px; }
+        h2 { text-align: center; color: #333; }
+        label { font-weight: bold; color: #555; }
+        input, textarea { font-size: 16px; width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        button:hover { background-color: #218838; }
+        
+        .cpf-cnpj-selection { display: flex; justify-content: center; align-items: center; padding-bottom: 50px; width: 100%; }
+        .cpf-cnpj-selection label { margin: 0 15px; text-align: center; display: flex; align-items: center; gap: 5px; }
+
+      
+        #pdf-template {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 210mm;
+            background: white;
+            visibility: hidden;
+            z-index: -1000;
+        }*/
