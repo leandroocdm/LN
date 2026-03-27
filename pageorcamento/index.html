@@ -5,178 +5,182 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Orçamento Profissional</title>
-    <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="static/styles.css">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        #cpfCnpjInputContainer {
+            overflow: hidden;
+            transition: all 0.5s ease;
+            opacity: 1;
+            max-height: 120px;
+            padding-bottom: 20px;
+        }
+
+        #cpfCnpjInputContainer.hidden {
+            opacity: 0;
+            max-height: 0;
+            padding-bottom: 0;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container">
-            <div class="logo">
-                <img src="static/img/logo.png" alt="logo">
-                <h2>Gerador de Orçamento Profissional</h2>
-            </div>    
-        <form id="orcamentoForm">
-            <fieldset>
-                <legend>Detalhes do Cliente</legend>
-                <label for="nomeCliente">Nome do Cliente:</label>
-                <input type="text" id="nomeCliente" name="nomeCliente" required><br><br>
 
-                <div class="cpf-cnpj-selection">
-                    <label><input type="radio" name="docType" value="cpfCnpj" checked> CPF/CNPJ</label>
-                    <label><input type="radio" name="docType" value="na"> Não informar</label>
-                </div>
+<div class="container">
+    <h2>Gerador de Orçamento</h2>
 
-                <div id="cpfCnpjInputContainer">
-                    <label for="cpfCnpjCliente">CPF/CNPJ:</label>
-                    <input type="text" id="cpfCnpjCliente" maxlength="18" required><br><br>
-                </div>
-            </fieldset>
+    <form id="orcamentoForm">
 
-            <fieldset>
-                <legend>Detalhes do Serviço</legend>
-                <label for="descricaoServico">Descrição do Serviço:</label><br>
-                <textarea id="descricaoServico" rows="6" required></textarea><br><br>
+        <fieldset>
+            <legend>Cliente</legend>
 
-                <label for="observacoes">Observações adicionais:</label><br>
-                <textarea id="observacoes" rows="4"></textarea><br><br>
+            <input type="text" id="nomeCliente" placeholder="Nome" required><br><br>
 
-                <label for="valorTotal">Valor Total (R$):</label>
-                <input type="number" id="valorTotal" step="0.01" required><br><br>
-            </fieldset>
+            <label><input type="radio" name="docType" value="cpfCnpj" checked> CPF/CNPJ</label>
+            <label><input type="radio" name="docType" value="na"> Não informar</label>
 
-            <button type="submit" id="gerarPdfBtn">Gerar PDF</button>
-        </form>
-    </div>
+            <div id="cpfCnpjInputContainer">
+                <input type="text" id="cpfCnpjCliente" placeholder="CPF ou CNPJ" required>
+            </div>
+        </fieldset>
 
-    <div id="pdf-template"></div>
+        <fieldset>
+            <legend>Serviço</legend>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('orcamentoForm');
-            const gerarPdfBtn = document.getElementById('gerarPdfBtn');
-            const pdfTemplateElement = document.getElementById('pdf-template');
-            const inputCpf = document.getElementById('cpfCnpjCliente');
-            const containerCpf = document.getElementById('cpfCnpjInputContainer');
-            const docTypeRadios = document.querySelectorAll('input[name="docType"]');
+            <textarea id="descricaoServico" placeholder="Descrição" required></textarea><br><br>
+            <textarea id="observacoes" placeholder="Observações"></textarea><br><br>
+            <input type="number" id="valorTotal" placeholder="Valor" required>
+        </fieldset>
 
-            // Toggle CPF/CNPJ
-            docTypeRadios.forEach(radio => {
-    radio.addEventListener('change', (event) => {
-        if (event.target.value === 'na') {
-            containerCpf.classList.add('hidden');
-            inputCpf.removeAttribute('required');
-            inputCpf.value = '';
-        } else {
-            containerCpf.classList.remove('hidden');
-            inputCpf.setAttribute('required', 'required');
-        }
+        <button type="submit" id="gerarPdfBtn">Gerar PDF</button>
+    </form>
+</div>
+
+<div id="pdf-template"></div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const form = document.getElementById('orcamentoForm');
+    const gerarPdfBtn = document.getElementById('gerarPdfBtn');
+    const pdfTemplateElement = document.getElementById('pdf-template');
+
+    const inputCpf = document.getElementById('cpfCnpjCliente');
+    const containerCpf = document.getElementById('cpfCnpjInputContainer');
+    const docTypeRadios = document.querySelectorAll('input[name="docType"]');
+
+    // ✅ TOGGLE COM ANIMAÇÃO
+    docTypeRadios.forEach(radio => {
+        radio.addEventListener('change', (event) => {
+            if (event.target.value === 'na') {
+                containerCpf.classList.add('hidden');
+                inputCpf.removeAttribute('required');
+                inputCpf.value = '';
+            } else {
+                containerCpf.classList.remove('hidden');
+                inputCpf.setAttribute('required', 'required');
+            }
+        });
     });
-});
 
-// Função de validação CPF
-            function validarCPF(cpf) {
-                cpf = cpf.replace(/[^\d]+/g, '');
-                if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
-                let soma = 0,
-                    resto;
-                for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
-                resto = (soma * 10) % 11;
-                if (resto === 10 || resto === 11) resto = 0;
-                if (resto !== parseInt(cpf.substring(9, 10))) return false;
-                soma = 0;
-                for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
-                resto = (soma * 10) % 11;
-                if (resto === 10 || resto === 11) resto = 0;
-                if (resto !== parseInt(cpf.substring(10, 11))) return false;
-                return true;
-            }
+    // ✅ VALIDAÇÃO CPF
+    function validarCPF(cpf) {
+        cpf = cpf.replace(/\D/g, '');
+        if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
 
-            // Função de validação CNPJ
-            function validarCNPJ(cnpj) {
-                cnpj = cnpj.replace(/[^\d]+/g, '');
-                if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) return false;
-                let tamanho = cnpj.length - 2;
-                let numeros = cnpj.substring(0, tamanho);
-                let digitos = cnpj.substring(tamanho);
-                let soma = 0;
-                let pos = tamanho - 7;
-                for (let i = tamanho; i >= 1; i--) {
-                    soma += numeros.charAt(tamanho - i) * pos--;
-                    if (pos < 2) pos = 9;
-                }
-                let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-                if (resultado != digitos.charAt(0)) return false;
-                tamanho = tamanho + 1;
-                numeros = cnpj.substring(0, tamanho);
-                soma = 0;
-                pos = tamanho - 7;
-                for (let i = tamanho; i >= 1; i--) {
-                    soma += numeros.charAt(tamanho - i) * pos--;
-                    if (pos < 2) pos = 9;
-                }
-                resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-                if (resultado != digitos.charAt(1)) return false;
-                return true;
-            }
+        let soma = 0;
+        for (let i = 0; i < 9; i++) soma += cpf[i] * (10 - i);
+        let resto = (soma * 10) % 11;
+        if (resto === 10) resto = 0;
+        if (resto != cpf[9]) return false;
 
-            // Formatar CPF
-            function formatarCPF(cpf) {
-                cpf = cpf.replace(/\D/g, '');
-                if (cpf.length !== 11) return cpf;
-                return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-            }
+        soma = 0;
+        for (let i = 0; i < 10; i++) soma += cpf[i] * (11 - i);
+        resto = (soma * 10) % 11;
+        if (resto === 10) resto = 0;
 
-            // Formatar CNPJ
-            function formatarCNPJ(cnpj) {
-                cnpj = cnpj.replace(/\D/g, '');
-                if (cnpj.length !== 14) return cnpj;
-                return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
-            }
+        return resto == cpf[10];
+    }
 
-                let cpfCnpjFormatado = '';
-                const docTypeSelected = document.querySelector('input[name="docType"]:checked').value;
+    // ✅ VALIDAÇÃO CNPJ
+    function validarCNPJ(cnpj) {
+        cnpj = cnpj.replace(/\D/g, '');
+        if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) return false;
 
-                if (docTypeSelected === 'cpfCnpj') {
-                    const valor = cpfCnpjInput.value;
-                    const somenteNumeros = valor.replace(/\D/g, '');
-                    let valido = false;
+        let tamanho = cnpj.length - 2;
+        let numeros = cnpj.substring(0, tamanho);
+        let digitos = cnpj.substring(tamanho);
 
-                    if (somenteNumeros.length === 11) {
-                        valido = validarCPF(valor);
-                        cpfCnpjFormatado = formatarCPF(somenteNumeros);
-                    } else if (somenteNumeros.length === 14) {
-                        valido = validarCNPJ(valor);
-                        cpfCnpjFormatado = formatarCNPJ(somenteNumeros);
-                    } else {
-                        valido = false;
-                    }
+        let soma = 0, pos = tamanho - 7;
 
-                    if (!valido) {
-                        alert("CPF ou CNPJ inválido. Corrija antes de gerar o PDF.");
-                        return;
-                    }
-                } else {
-                    cpfCnpjFormatado = 'Não informado';
+        for (let i = tamanho; i >= 1; i--) {
+            soma += numeros[tamanho - i] * pos--;
+            if (pos < 2) pos = 9;
+        }
+
+        let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+        if (resultado != digitos[0]) return false;
+
+        tamanho++;
+        numeros = cnpj.substring(0, tamanho);
+        soma = 0;
+        pos = tamanho - 7;
+
+        for (let i = tamanho; i >= 1; i--) {
+            soma += numeros[tamanho - i] * pos--;
+            if (pos < 2) pos = 9;
+        }
+
+        resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+        return resultado == digitos[1];
+    }
+
+    // 🚀 SUBMIT CORRETO
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        gerarPdfBtn.disabled = true;
+        gerarPdfBtn.textContent = 'Gerando...';
+
+        try {
+            let cpfCnpjFormatado = '';
+            const tipo = document.querySelector('input[name="docType"]:checked').value;
+
+            if (tipo === 'cpfCnpj') {
+                const valor = inputCpf.value;
+                const numeros = valor.replace(/\D/g, '');
+
+                let valido = false;
+
+                if (numeros.length === 11) {
+                    valido = validarCPF(valor);
+                    cpfCnpjFormatado = valor;
+                } else if (numeros.length === 14) {
+                    valido = validarCNPJ(valor);
+                    cpfCnpjFormatado = valor;
                 }
 
+                if (!valido) {
+                    alert("CPF ou CNPJ inválido.");
+                    return;
+                }
+
+            } else {
+                cpfCnpjFormatado = 'Não informado';
+            }
+
+            const nome = document.getElementById('nomeCliente').value;
+            const desc = document.getElementById('descricaoServico').value;
+            const obs = document.getElementById('observacoes').value || 'Nenhuma.';
+            const valorTotal = parseFloat(document.getElementById('valorTotal').value);
+            const today = new Date().toLocaleDateString('pt-BR');
+
+            const valorCartao = (valorTotal * 1.10).toFixed(2);
+
+            // tEMPLATE COMPLETO
             
-           
-            form.addEventListener('submit', async (event) => {
-                event.preventDefault();
-                gerarPdfBtn.disabled = true;
-                gerarPdfBtn.textContent = 'Gerando...';
-
-                try {
-                    const nome = document.getElementById('nomeCliente').value;
-                    const desc = document.getElementById('descricaoServico').value;
-                    const obs = document.getElementById('observacoes').value || 'Nenhuma.';
-                    const valorTotal = parseFloat(document.getElementById('valorTotal').value);
-                    const doc = inputCpf.value || 'Não informado';
-                    const today = new Date().toLocaleDateString('pt-BR');
-
-                    const valorCartao = (valorTotal * 1.10).toFixed(2);
 
                     pdfTemplateElement.innerHTML = `
                     <style>
@@ -238,43 +242,35 @@
                             Chave pix: 13.744.549/0001-32
                         </div>
                     </div>`;
+            
+ await new Promise(r => setTimeout(r, 800));
 
-                    // TRAVA TÉCNICA: Aguarda renderizar antes do print
-                    await new Promise(r => setTimeout(r, 800));
-
-                    const canvas = await html2canvas(pdfTemplateElement, {
-                        scale: 2,
-                        useCORS: true,
-                        backgroundColor: "#ffffff",
-                        onclone: (doc) => {
-                            doc.getElementById('pdf-template').style.visibility = 'visible';
-                        }
-                    });
-
-                    const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                    const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF('p', 'mm', 'a4');
-                    const w = pdf.internal.pageSize.getWidth();
-                    const h = (canvas.height * w) / canvas.width;
-
-                    pdf.addImage(imgData, 'JPEG', 0, 0, w, h);
-                    
-                    // Re-adicionando os links clicáveis no PDF (ajustados para a escala)
-                    pdf.link(w - 50, 20, 15, 15, { url: 'https://wa.me/55199998629120' });
-                    pdf.link(w - 35, 20, 15, 15, { url: 'https://instagram.com/lnclimatizacaoeletrica' });
-                     pdf.link(w -145 , 165, 80, 15, { url: 'https://instagram.com/lnclimatizacaoeletrica' });
-
-                    pdf.save(`Orcamento_${nome}.pdf`);
-
-                } catch (error) {
-                    alert('Erro: ' + error.message);
-                } finally {
-                    pdfTemplateElement.innerHTML = '';
-                    gerarPdfBtn.disabled = false;
-                    gerarPdfBtn.textContent = 'Gerar PDF';
-                }
+            const canvas = await html2canvas(pdfTemplateElement, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: "#ffffff",
             });
-        });
-    </script>
-</body>
-</html>
+
+            const imgData = canvas.toDataURL('image/jpeg', 0.95);
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+
+            const w = pdf.internal.pageSize.getWidth();
+            const h = (canvas.height * w) / canvas.width;
+
+            pdf.addImage(imgData, 'JPEG', 0, 0, w, h);
+
+            pdf.save(`Orcamento_${nome}.pdf`);
+
+        } catch (error) {
+            alert('Erro: ' + error.message);
+        } finally {
+            pdfTemplateElement.innerHTML = '';
+            gerarPdfBtn.disabled = false;
+            gerarPdfBtn.textContent = 'Gerar PDF';
+        }
+    });
+
+});
+</script>
+
