@@ -33,24 +33,19 @@ function toggleMenu() {
     document.getElementById("anoAtual").textContent = new Date().getFullYear();
 
 const carousel = document.querySelector(".grid-servicos");
+const delay = 3000;
 
-    let scrollAmount = 0;
-    const cardWidth = (carousel.clientWidth); 
-    const delay = 3000;
-
-    function autoScroll(){
-
-        scrollAmount += cardWidth;
-
-        if(scrollAmount >= carousel.scrollWidth - carousel.clientWidth){
-            scrollAmount = 0;
-        }
-
-        carousel.scrollTo({
-            left: scrollAmount,
-            behavior: "smooth"
-        });
-
+function autoScroll() {
+    // Calcula a largura atual toda vez que a função roda
+    const cardWidth = carousel.offsetWidth; 
+    
+    // Se chegou ao fim, volta ao zero
+    // Adicionamos uma tolerância de 10px para evitar erros de arredondamento de pixels
+    if (carousel.scrollLeft + cardWidth >= carousel.scrollWidth - 10) {
+        carousel.scrollTo({ left: 0, behavior: "smooth" });
+    } else {
+        carousel.scrollBy({ left: cardWidth, behavior: "smooth" });
     }
+}
 
-    setInterval(autoScroll, delay);
+setInterval(autoScroll, delay);
