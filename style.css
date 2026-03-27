@@ -501,6 +501,11 @@ a{
         padding: 5px;
         justify-items: center;
     }
+    
+    .card-contato p {
+    margin: 0px 0;
+    }
+    
     .rodape{
         font-size: 0.7rem;
         padding: 5px;
