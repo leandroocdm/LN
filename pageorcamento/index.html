@@ -47,188 +47,161 @@
 <div id="pdf-template"></div>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-
     const form = document.getElementById('orcamentoForm');
     const gerarPdfBtn = document.getElementById('gerarPdfBtn');
     const pdfTemplateElement = document.getElementById('pdf-template');
-
     const inputCpf = document.getElementById('cpfCnpjCliente');
     const containerCpf = document.getElementById('cpfCnpjInputContainer');
     const docTypeRadios = document.querySelectorAll('input[name="docType"]');
 
-    // ✅ TOGGLE COM ANIMAÇÃO
+    // Toggle de exibição CPF/CNPJ
     docTypeRadios.forEach(radio => {
         radio.addEventListener('change', (event) => {
             if (event.target.value === 'na') {
-                containerCpf.classList.add('hidden');
+                containerCpf.style.display = 'none';
                 inputCpf.removeAttribute('required');
                 inputCpf.value = '';
             } else {
-                containerCpf.classList.remove('hidden');
+                containerCpf.style.display = 'block';
                 inputCpf.setAttribute('required', 'required');
             }
         });
     });
 
-    // ✅ VALIDAÇÃO CPF
     function validarCPF(cpf) {
         cpf = cpf.replace(/\D/g, '');
         if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
-
         let soma = 0;
         for (let i = 0; i < 9; i++) soma += cpf[i] * (10 - i);
         let resto = (soma * 10) % 11;
         if (resto === 10) resto = 0;
         if (resto != cpf[9]) return false;
-
         soma = 0;
         for (let i = 0; i < 10; i++) soma += cpf[i] * (11 - i);
         resto = (soma * 10) % 11;
         if (resto === 10) resto = 0;
-
         return resto == cpf[10];
     }
 
-    // ✅ VALIDAÇÃO CNPJ
     function validarCNPJ(cnpj) {
         cnpj = cnpj.replace(/\D/g, '');
         if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) return false;
-
         let tamanho = cnpj.length - 2;
         let numeros = cnpj.substring(0, tamanho);
         let digitos = cnpj.substring(tamanho);
-
         let soma = 0, pos = tamanho - 7;
-
         for (let i = tamanho; i >= 1; i--) {
             soma += numeros[tamanho - i] * pos--;
             if (pos < 2) pos = 9;
         }
-
         let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
         if (resultado != digitos[0]) return false;
-
         tamanho++;
         numeros = cnpj.substring(0, tamanho);
-        soma = 0;
-        pos = tamanho - 7;
-
+        soma = 0; pos = tamanho - 7;
         for (let i = tamanho; i >= 1; i--) {
             soma += numeros[tamanho - i] * pos--;
             if (pos < 2) pos = 9;
         }
-
         resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
         return resultado == digitos[1];
     }
 
-    // 🚀 SUBMIT CORRETO
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
+
+        let cpfCnpjFormatado = '';
+        const tipo = document.querySelector('input[name="docType"]:checked').value;
+
+        if (tipo === 'cpfCnpj') {
+            const valor = inputCpf.value;
+            const numeros = valor.replace(/\D/g, '');
+            let valido = (numeros.length === 11) ? validarCPF(numeros) : (numeros.length === 14 ? validarCNPJ(numeros) : false);
+
+            if (!valido) {
+                alert("Por favor, insira um CPF ou CNPJ válido.");
+                return;
+            }
+            cpfCnpjFormatado = valor;
+        } else {
+            cpfCnpjFormatado = 'Não informado';
+        }
 
         gerarPdfBtn.disabled = true;
         gerarPdfBtn.textContent = 'Gerando...';
 
         try {
-            let cpfCnpjFormatado = '';
-            const tipo = document.querySelector('input[name="docType"]:checked').value;
-
-            if (tipo === 'cpfCnpj') {
-                const valor = inputCpf.value;
-                const numeros = valor.replace(/\D/g, '');
-
-                let valido = false;
-
-                if (numeros.length === 11) {
-                    valido = validarCPF(valor);
-                    cpfCnpjFormatado = valor;
-                } else if (numeros.length === 14) {
-                    valido = validarCNPJ(valor);
-                    cpfCnpjFormatado = valor;
-                }
-
-                if (!valido) {
-                    alert("CPF ou CNPJ inválido.");
-                    return;
-                }
-
-            } else {
-                cpfCnpjFormatado = 'Não informado';
-            }
-
             const nome = document.getElementById('nomeCliente').value;
             const desc = document.getElementById('descricaoServico').value;
             const obs = document.getElementById('observacoes').value || 'Nenhuma.';
             const valorTotal = parseFloat(document.getElementById('valorTotal').value);
             const today = new Date().toLocaleDateString('pt-BR');
 
-            const valorCartao = (valorTotal * 1.10).toFixed(2);
+            const valorCartao = (valorTotal * 1.10).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+            const valorVista = valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
-            // tEMPLATE COMPLETO
-            
-
-                    pdfTemplateElement.innerHTML = `
-                    <style>
-                        .pdf-box { padding: 40px; font-family: Arial, sans-serif; color: #333; background: white; }
-                        .header { display: flex; justify-content: space-between; align-items: center; background-color: #f0f0f0; padding: 15px; border-radius: 5px; }
-                        .header-left { display: flex; align-items: center; }
-                        .header-left img { width: 120px; margin-right: 15px; }
-                        .company-name { font-size: 28px; font-weight: bold; }
-                        .company-details { font-size: 13px; font-weight: 700; }
-                        .header-right { text-align: right; }
-                        .social-icons { display: flex; justify-content: flex-end; margin-top: 10px; gap: 15px; }
-                        .social-icons img { width: 60px; height: 60px; }
-                        .section-title { font-size: 16px; font-weight: bold; margin-top: 25px; text-transform: uppercase; border-bottom: 1px solid #ccc; }
-                        .budget-table { margin-top: 10px; background-color: #f9f9f9; padding: 15px; border-radius: 5px; white-space: pre-wrap; min-height: 80px; }
-                        .payment-options { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
-                        .payment-option { flex: 1; border: 1px solid #ddd; padding: 10px; text-align: center; }
-                        .payment-value { background-color: #eee; padding: 5px; font-weight: bold; margin-top: 5px; display: block; }
-                        .pix-info { text-align: center; margin-top: 30px; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; }
-                        .pix-logo { width: 30px; height: 30px; 
-                        .Logo { width: 120px; height: 120px; }
-                    </style>
-                    <div class="pdf-box">
-                        <div class="header">
-                            <div class="header-left">
-                                <img src="static/img/logo.png" alt="Logo">
-                                <div>
-                                    <div class="company-name">LN</div>
-                                    <div class="company-details">Climatização e elétrica</div>
-                                    <div class="company-details">CNPJ: 13.744.549/0001-32</div>
-                                    <div class="company-details">Salvador Pratta, 460</div>
-                                </div>
-                            </div>
-                            <div class="header-right">
-                                <div style="font-size: 12px;">Data: ${today}</div>
-                                <div class="social-icons">
-                                    <img src="static/img/ic_whatsapp.png">
-                                    <img src="static/img/ic_instagram.png">
-                                </div>
+            pdfTemplateElement.innerHTML = `
+                <style>
+                    .pdf-box { padding: 40px; font-family: Arial, sans-serif; color: #333; background: white; width: 800px; }
+                    .header { display: flex; justify-content: space-between; align-items: center; background-color: #f0f0f0; padding: 15px; border-radius: 5px; }
+                    .header-left { display: flex; align-items: center; }
+                    .header-left img { width: 80px; height: auto; margin-right: 15px; }
+                    .company-name { font-size: 24px; font-weight: bold; color: #000; }
+                    .company-details { font-size: 12px; font-weight: 700; }
+                    .header-right { text-align: right; }
+                    .social-icons { display: flex; justify-content: flex-end; margin-top: 10px; gap: 10px; }
+                    .social-icons img { width: 25px; height: 25px; }
+                    .section-title { font-size: 14px; font-weight: bold; margin-top: 20px; text-transform: uppercase; border-bottom: 2px solid #333; padding-bottom: 5px; }
+                    .budget-table { margin-top: 10px; background-color: #f9f9f9; padding: 15px; border-radius: 5px; white-space: pre-wrap; }
+                    .payment-options { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
+                    .payment-option { flex: 1; border: 1px solid #ddd; padding: 10px; text-align: center; border-radius: 5px; }
+                    .payment-value { background-color: #eee; padding: 5px; font-weight: bold; margin-top: 5px; display: block; font-size: 18px; }
+                    .pix-info { text-align: center; margin-top: 30px; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; }
+                    .pix-logo { width: 25px; height: 25px; }
+                </style>
+                <div class="pdf-box">
+                    <div class="header">
+                        <div class="header-left">
+                            <img src="static/img/logo.png" alt="Logo">
+                            <div>
+                                <div class="company-name">LN</div>
+                                <div class="company-details">Climatização e elétrica</div>
+                                <div class="company-details">CNPJ: 13.744.549/0001-32</div>
+                                <div class="company-details">Salvador Pratta, 460</div>
                             </div>
                         </div>
-
-                        <div class="section-title">Cliente</div>
-                        <p><strong>NOME:</strong> ${nome} | <strong>CPF/CNPJ:</strong> ${doc}</p>
-
-                        <div class="section-title">Orçamento</div>
-                        <div class="budget-table">${desc}</div>
-
-                        <div class="section-title">Observações</div>
-                        <p>${obs}</p>
-
-                        <div class="section-title">Formas de Pagamento</div>
-                        <div class="payment-options">
-                            <div class="payment-option"><strong>À Vista</strong><span class="payment-value">R$ ${valorTotal.toFixed(2)}</span></div>
-                            <div class="payment-option"><strong>Cartão (12x)</strong><span class="payment-value">R$ ${valorCartao}</span></div>
+                        <div class="header-right">
+                            <div style="font-size: 12px;">Data: ${today}</div>
+                            <div class="social-icons">
+                                <img src="static/img/ic_whatsapp.png">
+                                <img src="static/img/ic_instagram.png">
+                            </div>
                         </div>
+                    </div>
 
-                        <div class="pix-info">
-                            <img src="static/img/ic_pix.png" class="pix-logo">
-                            Chave pix: 13.744.549/0001-32
-                        </div>
-                    </div>`;
-            
- await new Promise(r => setTimeout(r, 800));
+                    <div class="section-title">Cliente</div>
+                    <p><strong>NOME:</strong> ${nome} <br> <strong>CPF/CNPJ:</strong> ${cpfCnpjFormatado}</p>
+
+                    <div class="section-title">Descrição do Serviço</div>
+                    <div class="budget-table">${desc}</div>
+
+                    <div class="section-title">Observações</div>
+                    <p>${obs}</p>
+
+                    <div class="section-title">Formas de Pagamento</div>
+                    <div class="payment-options">
+                        <div class="payment-option"><strong>À Vista (PIX/Dinheiro)</strong><span class="payment-value">R$ ${valorVista}</span></div>
+                        <div class="payment-option"><strong>Cartão (até 12x)</strong><span class="payment-value">R$ ${valorCartao}</span></div>
+                    </div>
+
+                    <div class="pix-info">
+                        <img src="static/img/ic_pix.png" class="pix-logo">
+                        Chave PIX: 13.744.549/0001-32
+                    </div>
+                </div>`;
+
+            // Pequeno delay para garantir que o DOM rendeu o template
+            await new Promise(r => setTimeout(r, 500));
 
             const canvas = await html2canvas(pdfTemplateElement, {
                 scale: 2,
@@ -239,23 +212,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const imgData = canvas.toDataURL('image/jpeg', 0.95);
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p', 'mm', 'a4');
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const imgWidth = pageWidth;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-            const w = pdf.internal.pageSize.getWidth();
-            const h = (canvas.height * w) / canvas.width;
-
-            pdf.addImage(imgData, 'JPEG', 0, 0, w, h);
-
-            pdf.save(`Orcamento_${nome}.pdf`);
+            pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+            pdf.save(`Orcamento_${nome.replace(/\s+/g, '_')}.pdf`);
 
         } catch (error) {
-            alert('Erro: ' + error.message);
+            console.error(error);
+            alert('Erro ao gerar PDF: ' + error.message);
         } finally {
             pdfTemplateElement.innerHTML = '';
             gerarPdfBtn.disabled = false;
             gerarPdfBtn.textContent = 'Gerar PDF';
         }
     });
-
 });
 </script>
 
