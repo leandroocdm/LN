@@ -101,17 +101,18 @@ button:disabled {
     z-index: -1;
 }
 
-#containerCpf {
-    opacity: 0;
-    max-height: 0;
+#cpfCnpjInputContainer {
     overflow: hidden;
-    transition: all 1.5s ease;
+    transition: all 0.5s ease;
+    opacity: 1;
+    max-height: 120px;
+    padding-bottom: 20px;
 }
 
-#containerCpf.show {
-    opacity: 1;
-    max-height: 200px; 
-    padding-bottom: 50px;
+#cpfCnpjInputContainer.hidden {
+    opacity: 0;
+    max-height: 0;
+    padding-bottom: 0;
 }
 
 
