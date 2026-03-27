@@ -32,25 +32,30 @@ function toggleMenu() {
 
     document.getElementById("anoAtual").textContent = new Date().getFullYear();
 
-const carousel = document.querySelector(".grid-servicos");
 
-    let scrollAmount = 0;
-    const cardWidth = (carousel.clientWidth+20); 
-    const delay = 3000;
 
-    function autoScroll(){
+function getCardWidth() {
+    const card = document.querySelector('.card');
+    const style = window.getComputedStyle(card);
 
-        scrollAmount += cardWidth;
+    const marginRight = parseInt(style.marginRight) || 0;
 
-        if(scrollAmount >= carousel.scrollWidth - carousel.clientWidth){
-            scrollAmount = 0;
-        }
+    return card.offsetWidth + marginRight;
+}
 
-        carousel.scrollTo({
-            left: scrollAmount,
-            behavior: "smooth"
-        });
+let currentIndex = 0;
 
-    }
+function moveCarousel(direction) {
+    const carousel = document.querySelector('.carousel');
+    const cardWidth = getCardWidth();
 
-    setInterval(autoScroll, delay);
+    currentIndex += direction;
+
+    const totalCards = document.querySelectorAll('.card').length;
+
+    // impedir sair dos limites
+    if (currentIndex < 0) currentIndex = 0;
+    if (currentIndex > totalCards - 1) currentIndex = totalCards - 1;
+
+    carousel.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+}
