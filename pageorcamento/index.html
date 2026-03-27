@@ -62,17 +62,17 @@
 
             // Toggle CPF/CNPJ
             document.querySelectorAll('input[name="docType"]').forEach(radio => {
-                radio.addEventListener('change', (e) => {
-                    if (e.target.value === 'na') {
-                        containerCpf.style.display = 'none';
-                        inputCpf.removeAttribute('required');
-                    } else {
-                        containerCpf.style.display = 'block';
-                        inputCpf.setAttribute('required', 'required');
-                    }
-                });
-            });
-
+    radio.addEventListener('change', (e) => {
+        if (e.target.value === 'na') {
+            containerCpf.classList.add('hidden');
+            inputCpf.removeAttribute('required');
+        } else {
+            containerCpf.classList.remove('hidden');
+            inputCpf.setAttribute('required', 'required');
+        }
+    });
+});
+           
             form.addEventListener('submit', async (event) => {
                 event.preventDefault();
                 gerarPdfBtn.disabled = true;
