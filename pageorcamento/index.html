@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const containerCpf = document.getElementById('cpfCnpjInputContainer');
     const docTypeRadios = document.querySelectorAll('input[name="docType"]');
 
-    // Toggle de exibição CPF/CNPJ
+    // Toggle CPF/CNPJ
     docTypeRadios.forEach(radio => {
         radio.addEventListener('change', (event) => {
             if (event.target.value === 'na') {
@@ -68,63 +68,62 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Funções de Validação
     function validarCPF(cpf) {
-        cpf = cpf.replace(/\D/g, '');
+        cpf = cpf.replace(/[^\d]+/g, '');
         if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
-        let soma = 0;
-        for (let i = 0; i < 9; i++) soma += cpf[i] * (10 - i);
-        let resto = (soma * 10) % 11;
-        if (resto === 10) resto = 0;
-        if (resto != cpf[9]) return false;
-        soma = 0;
-        for (let i = 0; i < 10; i++) soma += cpf[i] * (11 - i);
+        let soma = 0, resto;
+        for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
         resto = (soma * 10) % 11;
-        if (resto === 10) resto = 0;
-        return resto == cpf[10];
+        if (resto === 10 || resto === 11) resto = 0;
+        if (resto !== parseInt(cpf.substring(9, 10))) return false;
+        soma = 0;
+        for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+        resto = (soma * 10) % 11;
+        if (resto === 10 || resto === 11) resto = 0;
+        return resto === parseInt(cpf.substring(10, 11));
     }
 
     function validarCNPJ(cnpj) {
-        cnpj = cnpj.replace(/\D/g, '');
+        cnpj = cnpj.replace(/[^\d]+/g, '');
         if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) return false;
         let tamanho = cnpj.length - 2;
         let numeros = cnpj.substring(0, tamanho);
         let digitos = cnpj.substring(tamanho);
         let soma = 0, pos = tamanho - 7;
         for (let i = tamanho; i >= 1; i--) {
-            soma += numeros[tamanho - i] * pos--;
+            soma += numeros.charAt(tamanho - i) * pos--;
             if (pos < 2) pos = 9;
         }
         let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-        if (resultado != digitos[0]) return false;
+        if (resultado != digitos.charAt(0)) return false;
         tamanho++;
         numeros = cnpj.substring(0, tamanho);
         soma = 0; pos = tamanho - 7;
         for (let i = tamanho; i >= 1; i--) {
-            soma += numeros[tamanho - i] * pos--;
+            soma += numeros.charAt(tamanho - i) * pos--;
             if (pos < 2) pos = 9;
         }
         resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-        return resultado == digitos[1];
+        return resultado == digitos.charAt(1);
     }
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
 
-        let cpfCnpjFormatado = '';
-        const tipo = document.querySelector('input[name="docType"]:checked').value;
+        // Validação antes de gerar
+        const docTypeSelected = document.querySelector('input[name="docType"]:checked').value;
+        let cpfCnpjFormatado = 'Não informado';
 
-        if (tipo === 'cpfCnpj') {
+        if (docTypeSelected === 'cpfCnpj') {
             const valor = inputCpf.value;
-            const numeros = valor.replace(/\D/g, '');
-            let valido = (numeros.length === 11) ? validarCPF(numeros) : (numeros.length === 14 ? validarCNPJ(numeros) : false);
-
-            if (!valido) {
-                alert("Por favor, insira um CPF ou CNPJ válido.");
-                return;
+            const somenteNumeros = valor.replace(/\D/g, '');
+            if (somenteNumeros.length === 11 && !validarCPF(somenteNumeros)) {
+                alert("CPF inválido!"); return;
+            } else if (somenteNumeros.length === 14 && !validarCNPJ(somenteNumeros)) {
+                alert("CNPJ inválido!"); return;
             }
             cpfCnpjFormatado = valor;
-        } else {
-            cpfCnpjFormatado = 'Não informado';
         }
 
         gerarPdfBtn.disabled = true;
@@ -136,26 +135,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const obs = document.getElementById('observacoes').value || 'Nenhuma.';
             const valorTotal = parseFloat(document.getElementById('valorTotal').value);
             const today = new Date().toLocaleDateString('pt-BR');
+            const valorCartao = (valorTotal * 1.10).toFixed(2);
 
-            const valorCartao = (valorTotal * 1.10).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-            const valorVista = valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-
+            // ATENÇÃO: Usei a crase ( ` ) aqui para envolver o HTML
             pdfTemplateElement.innerHTML = `
                 <style>
-                    .pdf-box { padding: 40px; font-family: Arial, sans-serif; color: #333; background: white; width: 800px; }
+                    .pdf-box { padding: 40px; font-family: Arial, sans-serif; color: #333; background: white; width: 750px; }
                     .header { display: flex; justify-content: space-between; align-items: center; background-color: #f0f0f0; padding: 15px; border-radius: 5px; }
                     .header-left { display: flex; align-items: center; }
-                    .header-left img { width: 80px; height: auto; margin-right: 15px; }
-                    .company-name { font-size: 24px; font-weight: bold; color: #000; }
+                    .header-left img { width: 80px; margin-right: 15px; }
+                    .company-name { font-size: 24px; font-weight: bold; }
                     .company-details { font-size: 12px; font-weight: 700; }
                     .header-right { text-align: right; }
-                    .social-icons { display: flex; justify-content: flex-end; margin-top: 10px; gap: 10px; }
+                    .social-icons { display: flex; justify-content: flex-end; margin-top: 10px; gap: 15px; }
                     .social-icons img { width: 25px; height: 25px; }
-                    .section-title { font-size: 14px; font-weight: bold; margin-top: 20px; text-transform: uppercase; border-bottom: 2px solid #333; padding-bottom: 5px; }
-                    .budget-table { margin-top: 10px; background-color: #f9f9f9; padding: 15px; border-radius: 5px; white-space: pre-wrap; }
+                    .section-title { font-size: 14px; font-weight: bold; margin-top: 25px; text-transform: uppercase; border-bottom: 1px solid #ccc; }
+                    .budget-table { margin-top: 10px; background-color: #f9f9f9; padding: 15px; border-radius: 5px; white-space: pre-wrap; min-height: 80px; }
                     .payment-options { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
-                    .payment-option { flex: 1; border: 1px solid #ddd; padding: 10px; text-align: center; border-radius: 5px; }
-                    .payment-value { background-color: #eee; padding: 5px; font-weight: bold; margin-top: 5px; display: block; font-size: 18px; }
+                    .payment-option { flex: 1; border: 1px solid #ddd; padding: 10px; text-align: center; }
+                    .payment-value { background-color: #eee; padding: 5px; font-weight: bold; margin-top: 5px; display: block; }
                     .pix-info { text-align: center; margin-top: 30px; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; }
                     .pix-logo { width: 25px; height: 25px; }
                 </style>
@@ -178,50 +176,43 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                     </div>
-
                     <div class="section-title">Cliente</div>
-                    <p><strong>NOME:</strong> ${nome} <br> <strong>CPF/CNPJ:</strong> ${cpfCnpjFormatado}</p>
-
-                    <div class="section-title">Descrição do Serviço</div>
+                    <p><strong>NOME:</strong> ${nome} | <strong>CPF/CNPJ:</strong> ${cpfCnpjFormatado}</p>
+                    <div class="section-title">Orçamento</div>
                     <div class="budget-table">${desc}</div>
-
                     <div class="section-title">Observações</div>
                     <p>${obs}</p>
-
                     <div class="section-title">Formas de Pagamento</div>
                     <div class="payment-options">
-                        <div class="payment-option"><strong>À Vista (PIX/Dinheiro)</strong><span class="payment-value">R$ ${valorVista}</span></div>
-                        <div class="payment-option"><strong>Cartão (até 12x)</strong><span class="payment-value">R$ ${valorCartao}</span></div>
+                        <div class="payment-option"><strong>À Vista</strong><span class="payment-value">R$ ${valorTotal.toFixed(2)}</span></div>
+                        <div class="payment-option"><strong>Cartão (12x)</strong><span class="payment-value">R$ ${valorCartao}</span></div>
                     </div>
-
                     <div class="pix-info">
                         <img src="static/img/ic_pix.png" class="pix-logo">
-                        Chave PIX: 13.744.549/0001-32
+                        Chave pix: 13.744.549/0001-32
                     </div>
                 </div>`;
 
-            // Pequeno delay para garantir que o DOM rendeu o template
-            await new Promise(r => setTimeout(r, 500));
+            await new Promise(r => setTimeout(r, 800));
 
             const canvas = await html2canvas(pdfTemplateElement, {
                 scale: 2,
                 useCORS: true,
-                backgroundColor: "#ffffff",
+                backgroundColor: "#ffffff"
             });
 
             const imgData = canvas.toDataURL('image/jpeg', 0.95);
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p', 'mm', 'a4');
-            const pageWidth = pdf.internal.pageSize.getWidth();
-            const imgWidth = pageWidth;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            const w = pdf.internal.pageSize.getWidth();
+            const h = (canvas.height * w) / canvas.width;
 
-            pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
-            pdf.save(`Orcamento_${nome.replace(/\s+/g, '_')}.pdf`);
+            pdf.addImage(imgData, 'JPEG', 0, 0, w, h);
+            pdf.save(`Orcamento_${nome}.pdf`);
 
         } catch (error) {
             console.error(error);
-            alert('Erro ao gerar PDF: ' + error.message);
+            alert('Erro: ' + error.message);
         } finally {
             pdfTemplateElement.innerHTML = '';
             gerarPdfBtn.disabled = false;
