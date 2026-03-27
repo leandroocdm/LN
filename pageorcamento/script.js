@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p>${obs}</p>
                     <div class="section-title">Formas de Pagamento</div>
                     <div class="payment-options">
-                        <div class="payment-option"><strong>À Vista</strong><span class="payment-value">R$ ${valorPuro}</span></div>
+                        <div class="payment-option"><strong>À Vista</strong><span class="payment-value">R$ ${valorOriginal}</span></div>
                         <div class="payment-option"><strong>Cartão (12x)</strong><span class="payment-value">R$ ${valorCartao}</span></div>
                     </div>
                     <div class="pix-info">
