@@ -38,6 +38,7 @@ fieldset {
     border-radius: 4px;
     box-sizing: border-box; /* 🔥 ESSA LINHA RESOLVE */
     width: 100%;
+    font-family: Arial, sans-serif;
 }
 
 h2 { 
