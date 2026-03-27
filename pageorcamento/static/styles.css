@@ -116,6 +116,8 @@ button:disabled {
 }
 
 
+
+
 /* Estilos Internos do PDF (Aplicados via Script no innerHTML) */
 .pdf-render-container {
     padding: 40px;
