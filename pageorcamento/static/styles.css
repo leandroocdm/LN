@@ -16,6 +16,7 @@ body {
 #containerCpf.show {
     opacity: 1;
     max-height: 200px; /* ajusta conforme o tamanho */
+    padding-bottom: 50px;
 }
 
 
@@ -91,7 +92,6 @@ button:disabled {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-bottom: 50px;
     width: 100%;
 }
 
