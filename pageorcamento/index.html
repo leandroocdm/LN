@@ -38,10 +38,10 @@
             <legend>Cliente</legend>
 
             <input type="text" id="nomeCliente" placeholder="Nome" required><br><br>
-
-            <label><input type="radio" name="docType" value="cpfCnpj" checked> CPF/CNPJ</label>
-            <label><input type="radio" name="docType" value="na"> Não informar</label>
-
+            <div class="seletor">
+                <label><input type="radio" name="docType" value="cpfCnpj" checked> CPF/CNPJ</label>
+                <label><input type="radio" name="docType" value="na"> Não informar</label>
+            </div>
             <div id="cpfCnpjInputContainer">
                 <input type="text" id="cpfCnpjCliente" placeholder="CPF ou CNPJ" required>
             </div>
