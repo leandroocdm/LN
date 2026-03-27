@@ -6,6 +6,10 @@ body {
     padding: 0;
 }
 
+.seletor {
+    display: flex;
+    justify-content: center
+}
 
 .logo {
     display: flex;
@@ -52,6 +56,12 @@ input, textarea {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+}
+.budget-table,
+p,
+.section-title {
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 button {
