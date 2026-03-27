@@ -61,14 +61,15 @@
             const containerCpf = document.getElementById('cpfCnpjInputContainer');
 
             // Toggle CPF/CNPJ
-            document.querySelectorAll('input[name="docType"]').forEach(radio => {
-    radio.addEventListener('change', (e) => {
-        if (e.target.value === 'na') {
-            containerCpf.classList.add('hidden');
-            inputCpf.removeAttribute('required');
+            docTypeRadios.forEach(radio => {
+    radio.addEventListener('change', (event) => {
+        if (event.target.value === 'na') {
+            cpfCnpjInputContainer.classList.add('hidden');
+            cpfCnpjInput.removeAttribute('required');
+            cpfCnpjInput.value = '';
         } else {
-            containerCpf.classList.remove('hidden');
-            inputCpf.setAttribute('required', 'required');
+            cpfCnpjInputContainer.classList.remove('hidden');
+            cpfCnpjInput.setAttribute('required', 'required');
         }
     });
 });
@@ -88,7 +89,6 @@
 
                     const valorCartao = (valorTotal * 1.10).toFixed(2);
 
-                    // RESTAURAÇÃO COMPLETA DAS SUAS CONFIGURAÇÕES DE IMAGEM E LINKS
                     pdfTemplateElement.innerHTML = `
                     <style>
                         .pdf-box { padding: 40px; font-family: Arial, sans-serif; color: #333; background: white; }
