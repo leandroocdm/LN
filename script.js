@@ -35,7 +35,7 @@ function toggleMenu() {
 const carousel = document.querySelector(".grid-servicos");
 
     let scrollAmount = 0;
-    const cardWidth = (carousel.clientWidth+20); 
+    const cardWidth = (carousel.clientWidth); 
     const delay = 3000;
 
     function autoScroll(){
