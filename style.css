@@ -243,7 +243,7 @@ a{
     margin-top:30px;
     overflow:hidden;
     scroll-behavior:smooth;
-    gap: 5%;
+    gap: 20%;
 }
 
 /* scrollbar */
@@ -481,6 +481,10 @@ a{
     .secao-servicos{
         padding: 60px 5%;
     }
+
+    .grid-servicos{ 
+    gap: 0%;
+}
 
     .conteudo-destaque h1{
         font-size:32px;
