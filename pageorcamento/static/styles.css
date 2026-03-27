@@ -6,6 +6,19 @@ body {
     padding: 0;
 }
 
+#containerCpf {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.5s ease; /* ← controla a velocidade aqui */
+}
+
+#containerCpf.show {
+    opacity: 1;
+    max-height: 200px; /* ajusta conforme o tamanho */
+}
+
+
 .logo {
     display: flex;
     align-items: center;
