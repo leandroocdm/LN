@@ -10,7 +10,7 @@ body {
     opacity: 0;
     max-height: 0;
     overflow: hidden;
-    transition: all 0.5s ease; /* ← controla a velocidade aqui */
+    transition: all 1.5s ease; /* ← controla a velocidade aqui */
 }
 
 #containerCpf.show {
