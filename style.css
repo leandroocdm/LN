@@ -455,6 +455,10 @@ a{
         text-align:center;
     }
 
+    .topo-site{
+        padding: 10px 5%;
+    }
+    
     .menu.ativo{
         display:flex;
     }
@@ -472,6 +476,10 @@ a{
     .secao-sobre{
         flex-direction:column;
         gap:0;
+        padding: 60px 5%;        
+    }
+    .secao-servicos{
+        padding: 60px 5%;
     }
 
     .conteudo-destaque h1{
@@ -489,6 +497,14 @@ a{
 
     .logo img{
         height:40px;
+    }
+    .card-contato{
+        padding: 5px;
+        justify-items: center;
+    }
+    .rodape{
+        font-size: 0.7rem;
+        padding: 5px;
     }
 }
 
